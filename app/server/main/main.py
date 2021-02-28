@@ -1,7 +1,11 @@
 from typing import Optional
+from logging.config import dictConfig
 
 from fastapi import FastAPI
+from controller.log import log_config
 
+
+dictConfig(log_config)
 app = FastAPI()
 
 
