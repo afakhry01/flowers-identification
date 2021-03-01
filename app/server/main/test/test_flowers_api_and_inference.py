@@ -39,6 +39,11 @@ def test_classify_failure():
     assert response.status_code == 404
     assert response.json().get('detail') == 'Not Found'
 
+    # Wrong method
+    response = client.get("/api/flowers/classify/")
+    assert response.status_code == 405
+    assert response.json().get('detail') == 'Method Not Allowed'
+
 def test_exceptions():
     with open("resources/test.jpg", "rb") as image:
         f = image.read()
