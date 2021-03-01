@@ -22,14 +22,44 @@ model_transforms = {
 
 
 class Inference:
+    """A class to handle models inference
+
+    Attributes:
+        model (models): The model used to train the NN
+        classes (dict): Classes of objects used in training (number to name)
+        transforms (transforms): Transformations applied to images before training/classification
+        device (str, optional): The device used for inference. Defaults to 'cpu'.
+    """
     def __init__(self, model: models, classes: dict, transforms: transforms, device: str = 'cpu'):
+        """The constructor for Inference class
+
+        Args:
+            model (models): The model used to train the NN
+            classes (dict): Classes of objects used in training (number to name)
+            transforms (transforms): Transformations applied to images before training/classification
+            device (str, optional): The device used for inference. Defaults to 'cpu'.
+        """
         self.model = model
         self.classes = classes
         self.transforms = transforms
         self.device = device
 
     @classmethod
-    def load_dense_net(cls, weights_path, classes_path):
+    def load_dense_net(cls, weights_path: str, classes_path: str):
+        """Creates an Inference object for Dense Net using the given weights
+           and classes.
+
+        Args:
+            weights_path (str): Path to the trained weights (.pt)
+            classes_path (str): Path to classes file (.json)
+
+        Raises:
+            FileNotFoundError: If the given path for weights_path or classes_path
+                               is invalid.
+
+        Returns:
+            Inference: An initialized object
+        """
         if not os.path.isfile(weights_path):
             raise FileNotFoundError(f"File does not exist: {weights_path}")
         elif not os.path.isfile(classes_path):
@@ -51,6 +81,17 @@ class Inference:
             return cls(model, classes, transforms=model_transforms['dense_net_1'] ,device=device)
 
     def classify(self, image_bytes: bytes) -> Tuple[str, float]:
+        """Executes inference and classifies the object in the given image
+
+        Args:
+            image_bytes (bytes): Image in bytes format
+
+        Raises:
+            ValueError: If any of model, classes or transforms is falsy
+
+        Returns:
+            Tuple[str, float]: The classification and confidence
+        """
         if not self.model:
             raise ValueError("Uninitialized model")
         elif not self.classes:
@@ -70,5 +111,7 @@ class Inference:
 
             # 4. Convert output to readable classification
             pred = self.classes[str(pred.item())].title()
+
+            logger.debug("Detected %s with confidence %s", pred, score)
 
             return pred, score
