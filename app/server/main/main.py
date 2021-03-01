@@ -11,18 +11,5 @@ app = FastAPI()
 
 app.include_router(
     flowers.router,
-    prefix="/api",
-    #tags=["api"],
-    #responses={418: {"description": "I'm a teapot"}},
+    prefix="/api"
 )
-
-'''
-@app.get("/api")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
-'''

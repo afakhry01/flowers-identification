@@ -7,7 +7,6 @@ from controller.inference import Inference
 
 router = APIRouter(
     prefix="/flowers",
-    #tags=["flowers"],
     responses={404: {"description": "Not found"}},
 )
 
@@ -31,5 +30,5 @@ async def classify_item(item: Item):
         }
     except ValueError:
         raise HTTPException(
-            status_code=500, detail="Cannot get value"
+            status_code=422, detail="Invalid Format"
         )
