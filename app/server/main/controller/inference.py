@@ -110,7 +110,7 @@ class Inference:
             score, pred = torch.max(output, 1)
 
             # 4. Convert output to readable classification
-            pred = self.classes[str(pred.item())].title()
+            pred = self.classes[str(pred.item()+1)].title()
 
             logger.debug("Detected %s with confidence %s", pred, score)
 
